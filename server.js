@@ -11,6 +11,7 @@ const { OpenAI } = require('openai');
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.options('*', cors()); // ⚡️ thêm dòng này
 
 const upload = multer({ storage: multer.memoryStorage() }); // lưu tạm vào memory
 
@@ -27,6 +28,9 @@ app.get('/', (req, res) => res.send('✅ Whisper backend running'));
 // Field name expected: "audio" (form-data file)
 app.post('/transcribe', upload.single('audio'), async (req, res) => {
   try {
+    console.log("File uploaded:", req.file);
+console.log("Exists?", fs.existsSync(req.file.path));
+console.log("Size:", fs.statSync(req.file.path).size);
     if (!req.file || !req.file.buffer) {
       return res.status(400).json({ error: 'No audio file received (field name must be "audio")' });
     }
@@ -68,4 +72,4 @@ app.post('/transcribe', upload.single('audio'), async (req, res) => {
 
 // Start
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server listening on http://localhost:${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on http://0.0.0.0:${PORT}`));
