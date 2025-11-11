@@ -11,7 +11,7 @@ const { OpenAI } = require('openai');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.options('*', cors()); // ⚡️ thêm dòng này
+app.options('/(.*)', cors());
 
 const upload = multer({ storage: multer.memoryStorage() }); // lưu tạm vào memory
 
@@ -73,3 +73,4 @@ console.log("Size:", fs.statSync(req.file.path).size);
 // Start
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => console.log(`Server running on http://0.0.0.0:${PORT}`));
+
